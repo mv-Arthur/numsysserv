@@ -16,11 +16,20 @@ function containsDigitsAndLettersOtherThan01234567ABCDEF(str: string) {
 	return regex.test(str);
 }
 
+function hasNonNumericCharacters(input: string): boolean {
+	const regex = /\D/;
+	return regex.test(input);
+}
+
 @Injectable()
 export class AppService {
 	convertNum(pos: posDto): string {
 		if (pos.number === "") {
 			throw new HttpException("поле не может быть пустым", HttpStatus.BAD_REQUEST);
+		}
+
+		if (hasNonNumericCharacters(pos.number) && pos.fromBase === 10) {
+			throw new HttpException("десятичная система счисления включает в себя только числовые значения: 0-9", HttpStatus.BAD_REQUEST);
 		}
 
 		if (!containsOnly01(pos.number) && pos.fromBase === 2) {
